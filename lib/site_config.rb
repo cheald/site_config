@@ -5,4 +5,6 @@ def config_option(p, env = nil)
 	raise "No configuration for environment \"#{env}\"" if SITE_CONFIG[env].nil?	
 	inherit_env = SITE_CONFIG[env]["inherit"]
 	SITE_CONFIG[env][p] || (inherit_env && config_option(p, inherit_env))
+  result = SITE_CONFIG[env][p] || (inherit_env && config_option(p, inherit_env))
+  result.start_with?('%w(', '%q(', '%Q(') && result.end_with?(')') ? eval(result) : result
 end
